@@ -1,5 +1,6 @@
 import { Box, Flex, Grid, GridItem, HStack, Show } from '@chakra-ui/react'
 import NavBar from './components/NavBar'
+import MovieGrid from './components/MovieGrid'
 
 
 
@@ -26,7 +27,7 @@ function App() {
       </Show>
 
       <GridItem area="main" bg="pink">
-        Main
+        <MovieGrid />
       </GridItem>
     </Grid>
   )
