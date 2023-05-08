@@ -1,32 +1,34 @@
 import useMovies from '../hooks/useMovies'
-import { SimpleGrid, Text, Switch } from '@chakra-ui/react'
+import { SimpleGrid, Text, Switch, Slider } from '@chakra-ui/react'
 import MovieCardContainer from './MovieCardContainer'
 import MovieCardSkeleton from './MovieCardSkeleton'
 import MovieCard from './MovieCard'
 import { useState } from 'react'
+import { MovieQuery } from '../App'
 
-const MovieGrid = () => {
-  // const [endpoint, setEndpoint] = useState('/movie/week')
+interface Props {
+  movieQuery: MovieQuery
+}
+
+const MovieGrid = ({ movieQuery }: Props) => {
+
   const [isWeek, setIsWeek] = useState(false)
   const {
     data: dataWeek,
     error: errorWeek,
     isLoading: isLoadingWeek,
-  } = useMovies('/movie/week')
+  } = useMovies(movieQuery, '/movie/week')
   const {
     data: dataDay,
     error: errorDay,
     isLoading: isLoadingDay,
-  } = useMovies('/movie/day')
-  // const handleToggle = () => {
-  //   setEndpoint((prevEndpoint) =>
-  //     prevEndpoint === '/movie/week' ? '/movie/day' : '/movie/week'
-  //   )
-  // }
+  } = useMovies(movieQuery, '/movie/day')
 
   const handleToggle = () => {
     setIsWeek(!isWeek)
   }
+
+  const regexSearch = new RegExp(movieQuery.searchText, 'i')
 
   // const { data, error, isLoading } = useMovies()
   const skeletons = [1, 2, 3, 4, 5, 6]
@@ -44,8 +46,7 @@ const MovieGrid = () => {
       <SimpleGrid
         columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
         padding="10px"
-        spacing={6}
-      >
+        spacing={6}>
         {isWeek
           ? isLoadingWeek
           : isLoadingDay &&
@@ -54,7 +55,7 @@ const MovieGrid = () => {
                 <MovieCardSkeleton />
               </MovieCardContainer>
             ))}
-        {(isWeek ? dataWeek : dataDay).map((movie) => (
+        {(isWeek ? dataWeek : dataDay).filter((movie) => regexSearch.test(movie.title)).map((movie) => (
           <MovieCardContainer key={movie.id}>
             <MovieCard movie={movie} />
           </MovieCardContainer>
