@@ -10,15 +10,18 @@ export interface Movie {
   poster_path: string
   release_date: string
   vote_average: number
+  popularity: number
 }
 
-// const useMovies = () => useData<Movie>('/movie/day')
+// const useMovies = () => useData<Movie>('/trending/movie/day')
 // const useMovies = (endpoint: string) => useData<Movie>(endpoint)
 const useMovies = (movieQuery: MovieQuery, endpoint: string) =>
-  useData<Movie>(
+  useData(
     endpoint,
     {
-      params: {},
+      // params: {
+      //   genres: movieQuery.genre?.id,
+      // },
     },
     [movieQuery]
   )

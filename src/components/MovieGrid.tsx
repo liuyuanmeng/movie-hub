@@ -11,22 +11,23 @@ interface Props {
 }
 
 const MovieGrid = ({ movieQuery }: Props) => {
-
   const [isWeek, setIsWeek] = useState(false)
   const {
     data: dataWeek,
     error: errorWeek,
     isLoading: isLoadingWeek,
-  } = useMovies(movieQuery, '/movie/week')
+  } = useMovies(movieQuery, '/trending/movie/week')
   const {
     data: dataDay,
     error: errorDay,
     isLoading: isLoadingDay,
-  } = useMovies(movieQuery, '/movie/day')
+  } = useMovies(movieQuery, '/trending/movie/day')
 
   const handleToggle = () => {
     setIsWeek(!isWeek)
   }
+
+  const selectedGenre = movieQuery.genre
 
   const regexSearch = new RegExp(movieQuery.searchText, 'i')
 
@@ -43,6 +44,7 @@ const MovieGrid = ({ movieQuery }: Props) => {
         colorScheme="blue"
       />
       <Text marginLeft="4">Show {isWeek ? 'Daily' : 'Weekly'} Movies</Text>
+
       <SimpleGrid
         columns={{ sm: 1, md: 2, lg: 3, xl: 4 }}
         padding="10px"
@@ -55,11 +57,18 @@ const MovieGrid = ({ movieQuery }: Props) => {
                 <MovieCardSkeleton />
               </MovieCardContainer>
             ))}
-        {(isWeek ? dataWeek : dataDay).filter((movie) => regexSearch.test(movie.title)).map((movie) => (
-          <MovieCardContainer key={movie.id}>
-            <MovieCard movie={movie} />
-          </MovieCardContainer>
-        ))}
+        {(isWeek ? dataWeek : dataDay)
+          .filter((movie: any) => regexSearch.test(movie.title))
+          .filter((movie: any) =>
+            selectedGenre?.id
+              ? movie.genre_ids.includes(selectedGenre?.id)
+              : 1 === 1
+          )
+          .map((movie: any) => (
+            <MovieCardContainer key={movie.id}>
+              <MovieCard movie={movie} />
+            </MovieCardContainer>
+          ))}
       </SimpleGrid>
     </>
   )

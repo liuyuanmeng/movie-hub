@@ -4,10 +4,10 @@ import apiClient from '../services/api-client'
 
 // interface FetchResponse<T> {
 //   count: number
-//   results: T[]
+//   genres: T[]
 // }
 
-const useData = (
+const useGenreData = (
   endpoint: string,
   requestConfig?: AxiosRequestConfig,
   // optionl ?
@@ -28,7 +28,7 @@ const useData = (
           ...requestConfig,
         })
         .then((res) => {
-          setData(res.data.results)
+          setData(res.data.genres)
           setLoading(false)
         })
         .catch((err) => {
@@ -39,10 +39,10 @@ const useData = (
 
       return () => controller.abort()
     },
-    deps? [...deps] : []
+    deps ? [...deps] : []
   )
 
   return { data, error, isLoading }
 }
 
-export default useData
+export default useGenreData
